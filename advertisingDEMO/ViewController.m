@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-
+#import "AdvertiseViewController.h"
 @interface ViewController ()
 
 @end
@@ -16,7 +16,21 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+    
+    self.title = @"首页";
+    
+    self.view.backgroundColor = [UIColor orangeColor];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushToAd) name:@"pushtoad" object:nil];
+}
+
+- (void)pushToAd {
+    
+    AdvertiseViewController *adVc = [[AdvertiseViewController alloc] init];
+    
+    
+    [self presentViewController:adVc animated:YES completion:nil];
+    
 }
 
 - (void)didReceiveMemoryWarning {
