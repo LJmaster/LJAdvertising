@@ -21,6 +21,40 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
+    
+    //深度链接设置
+    if (launchOptions[UIApplicationLaunchOptionsURLKey] == nil) {
+        [FBSDKAppLinkUtility fetchDeferredAppLink:^(NSURL *url, NSError *error) {
+            if (error) {
+                //返回错误== 自然量
+                NSLog(@"Received error while fetching deferred app link %@", error);
+                [self setOrganic];
+            }else{
+                if (url) {
+                    
+                    [[NSUserDefaults standardUserDefaults] setObject:[url host] forKey:@"Scanner_price"];
+                    //广告量
+                    [[UIApplication sharedApplication] openURL:url];
+                    [[NSUserDefaults standardUserDefaults] setObject:@"Non-organic" forKey:@"Scanneruser_Organic"];
+                    [[NSUserDefaults standardUserDefaults] setURL:url forKey:@"Non-organic-url"];
+                    //判断是不是购买成功了
+                    if ([MMExpired getSubscriptionIsExpired] == YES) {
+                        self.window.rootViewController = [MMGuideViewController new];
+                    }else{
+                        self.window.rootViewController = [ViewController new];
+                    }
+                }else{
+                    //自然量
+                    [self setOrganic];
+                }
+            }
+        }];
+    }
+    
+    
+    
+    
+    
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     
     self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:[[ViewController alloc] init]];
